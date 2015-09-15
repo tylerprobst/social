@@ -1,0 +1,10 @@
+DEBUG = True
+SQLALCHEMY_DATABASE_URI = "mysql://north:starwars@localhost/social"
+SECRET_KEY = 'something super duper secret'
+MAIL_SERVER = 'smtp.gmail.com'
+MAIL_PORT = 587
+MAIL_USE_TLS = True
+MAIL_USE_SSL = False
+MAIL_USERNAME = 'tprobstcoding@gmail.com' 
+MAIL_PASSWORD = 'Tylerprobst1'
+MAIL_DEFAULT_SENDER = 'tprobstcoding@gmail.com'

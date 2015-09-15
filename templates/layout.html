@@ -1,0 +1,15 @@
+{% with messages = get_flashed_messages() %}
+	{% for message in messages %}
+		<p>{{message}}</p>
+	{% endfor %}
+{% endwith %}
+{% block body %}{% endblock %}
+{% if current_user %}
+<form method="POST" action ="/logout">
+	{{csrf_helper()}}
+	<button type="submit">logout</button>
+</form>
+{% else %}
+<p><a href="/login">login</a></p>
+{% endif %}
+<p><a href="/signup">sign up</a></p>

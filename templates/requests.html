@@ -1,0 +1,21 @@
+<h2>Pending Friend Requests</h2>
+<hr/ >
+{% for request in pending_requests %}
+	{{request.receiver.username}}
+	<form method="POST" action="/requests/cancel">
+		<input name="request_id" type="hidden" value="{{request.id}}">
+		{{csrf_helper()}}
+ 		<p><button type="submit">Cancel Request</button></p>
+ 	</form>
+{% endfor %}
+
+<h2>Received Friend Requests</h2>
+<hr/ >
+{% for request in sent_requests %}
+	{{request.sender.username}}
+	<form method="POST" action="/requests/accept">
+		<input name="request_id" type="hidden" value="{{request.id}}">
+		{{csrf_helper()}}
+ 		<p><button type="submit">Accept Request</button></p>
+ 	</form>
+{% endfor %}

@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block body %}
+<h1>Sign Up</h1>
+<form method="POST" action="/signup">
+	<p><input name="first_name" type="text" placeholder="first" /></p>
+	<p><input name="last_name" type="text" placeholder="last" /></p>
+	<p><input name="username" type="text" placeholder="username" /></p>
+	<p><input name="password" type="password" placeholder="password" /></p>
+	<p><input name="confirm_password" type="password" placeholder="confirm password"/></p>
+	<p><input name="email" type="email" placeholder="email" /></p>
+	<p><input name="confirm_email" type="email" placeholder="confirm email"/></p>
+	{{csrf_helper()}}
+	<p><button type="submit">Submit</button></p>
+</form>
+{% endblock %}
