@@ -61,6 +61,10 @@ class User(db.Model):
 	def from_user_id(cls, user_id):
 		return cls.query.filter(cls.user_id == user_id).first()
 
+	@classmethod
+	def from_fb_user_id(cls, fb_user_id):#if user does not exist create user from FB_ID, Find way to connect existing user to FB_ID
+		return cls.query.filter(cls.fb_user_id == fb_user_id).first()
+
 	@classmethod 
 	def from_username(cls, username):
 		return cls.query.filter(cls.username == username).first()

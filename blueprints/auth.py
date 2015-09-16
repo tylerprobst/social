@@ -3,6 +3,7 @@ from flask import Blueprint, flash, Flask, g, redirect, render_template, request
 from flask_mail import Message, Mail
 from models import *
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
+import requests
 
 auth = Blueprint("auth", __name__)
 
@@ -34,6 +35,18 @@ def logout():
 	session['token'] = None
 	flash('You have sucessfully logged out.')
 	return redirect('/')
+
+@auth.route('/oauth')
+def oauth():
+	code = request.args.get('code')
+	access_token_link = 'https://graph.facebook.com/v2.3/oauth/access_token?client_id={0}&redirect_uri={1}&client_secret={2}&code={3}'.format(
+							app.config['FB_APP_ID'], app.config['FB_REDIRECT_URI'], app.config['FB_APP_SECRET'], code)
+	user_token_request = requests.get(access_token_link)
+	user_token = user_token_request.json()['access_token']
+	debug_link = 'https://graph.facebook.com/debug_token?input_token={0}&access_token={1}'.format(user_token, app.config['FB_APP_ACCESS_TOKEN'])
+	debug_request = requests.get(debug_link)
+	fb_user_id = debug_request.json()['data']['user_id']
+	return fb_user_id
 
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup():

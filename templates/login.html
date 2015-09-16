@@ -4,7 +4,7 @@
 	<form method="POST" action="/login">
 		<p><input name="email" type="email" placeholder="email" /></p>
 		<p><input name="password" type="password" placehoder="password" /></p>
+		{{csrf_helper()}}
 		<p><button type="submit">SUBMIT</button>
 	</form>
-	{{csrf_helper()}}
 {% endblock %} 
