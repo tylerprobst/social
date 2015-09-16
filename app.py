@@ -25,7 +25,7 @@ def gen_csrf_token():
 
 def csrf_helper():
 	token = gen_csrf_token()
-	return "<input type='hidden' name='_csrf_token' value='{0}' />".format(token)
+	return '<input type="hidden" name="_csrf_token" value="{0}" />'.format(token)
 
 
 app.jinja_env.globals['csrf_helper'] = csrf_helper
