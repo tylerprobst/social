@@ -46,7 +46,14 @@ def oauth():
 	debug_link = 'https://graph.facebook.com/debug_token?input_token={0}&access_token={1}'.format(user_token, app.config['FB_APP_ACCESS_TOKEN'])
 	debug_request = requests.get(debug_link)
 	fb_user_id = debug_request.json()['data']['user_id']
-	return fb_user_id
+	user = User.from_fb_user_id(fb_user_id)
+	if not user:
+		session['fb_user_id'] = fb_user_id
+		return redirect('/signup') 
+	else:
+		user.fb_login()
+		flash('Logged in')
+		return redirect('/')
 
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -61,6 +68,7 @@ def signup():
 		confirm_email = request.form.get('confirm_email')
 		password = request.form.get('password')
 		confirm_password = request.form.get('confirm_password')
+		fb_user_id = session['fb_user_id']
 		if email != confirm_email:
 			flash('Emails do not match, please try again.')
 			return redirect('/signup')
@@ -68,22 +76,24 @@ def signup():
 			flash('Passwords do not match, please try again.')
 			return redirect('/signup')
 		else:
-			user = User.create(first_name=first_name, last_name=last_name, username=username, email=email, password=password)
-			token = user.gentoken()
-			link = 'http://localhost:5000/verify?token=' + token
-			msg = Message('email works!', sender='tprobstcoding@gmail.com', recipients=['tprobstcoding@gmail.com'])
-			msg.body = link
-			mail.send(msg)
-			flash('Confirmation email sent.')
-		'''except IntegrityError:
-			flash('That username/email is taken, please try again.')
-			db.session.rollback()
-			return redirect('/signup')
-		except InvalidRequestError:
-			flash('I\'m sorry, something went wrong, please try again.')
-			db.session.rollback()
-			return redirect('/signup')'''
-		return redirect('/')
+			user = User.create(first_name=first_name, last_name=last_name, username=username, email=email, password=password, fb_user_id=fb_user_id)
+			del session['fb_user_id']
+			flash('User created, please login')
+		# 	token = user.gentoken()
+		# 	link = 'http://localhost:5000/verify?token=' + token
+		# 	msg = Message('email works!', sender='tprobstcoding@gmail.com', recipients=['tprobstcoding@gmail.com'])
+		# 	msg.body = link
+		# 	mail.send(msg)
+		# 	flash('Confirmation email sent.')
+		# '''except IntegrityError:
+		# 	flash('That username/email is taken, please try again.')
+		# 	db.session.rollback()
+		# 	return redirect('/signup')
+		# except InvalidRequestError:
+		# 	flash('I\'m sorry, something went wrong, please try again.')
+		# 	db.session.rollback()
+		# 	return redirect('/signup')'''
+		return redirect('/login')
 
 @auth.route('/verify')
 def verify():

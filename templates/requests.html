@@ -1,3 +1,5 @@
+{% extends "layout.html" %}
+{% block body %}
 <h2>Pending Friend Requests</h2>
 <hr/ >
 {% for request in pending_requests %}
@@ -19,3 +21,4 @@
  		<p><button type="submit">Accept Request</button></p>
  	</form>
 {% endfor %}
+{% endblock %}

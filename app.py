@@ -1,9 +1,5 @@
 #HW: make a user home page that shows personal info about the user and shows friends--**
-#HW: make a friendship request table, once request is accepted/rejected delete it from table--**
 #HW: we want to be able to share and comment on pictures.
-#HW: make it possible to accept friend requests(make a page to show sent and received requests with a user route)
-
-#HW: if user does not exist create user from FB_ID, Find way to connect existing user to FB_ID
 
 from db import db
 from flask import Blueprint, flash, Flask, g, redirect, render_template, request, session, abort, Markup
@@ -29,7 +25,9 @@ def csrf_helper():
 	return Markup('<input type="hidden" name="_csrf_token" value="{0}" />'.format(token))
 
 
+
 app.jinja_env.globals['csrf_helper'] = csrf_helper
+app.jinja_env.globals['oauth_link'] = 'https://www.facebook.com/dialog/oauth?client_id={0}&redirect_uri={1}'.format(app.config['FB_APP_ID'], app.config['FB_REDIRECT_URI'])
 
 @app.before_request
 def csrf_protect():
@@ -43,10 +41,9 @@ def csrf_protect():
 def home():
 	user = current_user()
 	username = None
-	oauth_link = 'https://www.facebook.com/dialog/oauth?client_id={0}&redirect_uri={1}'.format(app.config['FB_APP_ID'], app.config['FB_REDIRECT_URI'])
 	if user:
 		username = user.username
-	return render_template('home.html', username=username, current_user=user, oauth_link=oauth_link)
+	return render_template('home.html', username=username, current_user=user)
 
 
 app.register_blueprint(auth.auth, session=session, g=g)

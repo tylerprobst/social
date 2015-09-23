@@ -1,21 +1,26 @@
-<h1></h1>
-{% extends "layout.html" %}
-{% block body %}
-	{% if current_user %}
-	<p>You are logged in as: {{username}} {{user_id}}</p>
-	{% endif %}
-	<hr />
-	{% if current_user %}
-		<form action="/posts" method="POST">
-			<input type="text" name="title" placeholder="Title" />
-			<input type="text" name="body" placeholder="Content" />
-			{{csrf_helper()}}
-			<button type="submit">Make Post</button>
-		</form>
-	{% else %}
-		<p>Please <a href="/login">login</a> to make comments!</p>
-	<a href="{{oauth_link}}">Login with Facebook</a>
-	{% endif %}
-	
-	<hr />
-{% endblock %} 
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="css/home.css">
+  </head>
+	<body>
+		<div class="nav">
+			<h2>Home</h2>
+				{% extends "layout.html" %}
+				{% block body %}
+					{% if current_user %}
+					<p>You are logged in as: {{username}} {{user_id}}</p>
+					{% endif %}
+					{% if current_user %}
+						<form action="/posts" method="POST">
+							<input type="text" name="title" placeholder="Title" />
+							<input type="text" name="body" placeholder="Content" />
+							{{csrf_helper()}}
+							<button type="submit">Make Post</button>
+						</form>
+					{% else %}
+					{% endif %}
+				{% endblock %} 
+		</div>
+	</body>
+</html>

@@ -12,13 +12,14 @@ class User(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	first_name = db.Column(db.String(255), nullable=False)
 	last_name = db.Column(db.String(255), nullable=False)
-	username = db.Column(db.String(255), unique=True, index=True, nullable=False)
+	username = db.Column(db.String(255), unique=True, index=True)
 	password_hash = db.Column(db.String(255), index=True, nullable=False)
-	admin = db.Column(db.Boolean, default=False, nullable=False)
+	admin = db.Column(db.Boolean, default=False)
 	posts = db.relationship('Post', backref='user')
 	comments = db.relationship('Comment', backref='user')
-	verified = db.Column(db.Boolean, default=False, nullable=False)
+	verified = db.Column(db.Boolean, default=False)
 	email = db.Column(db.String(255), unique=True, nullable=False)
+	fb_user_id = db.Column(db.BigInteger, unique=True, nullable=False)
 	sent_requests = db.relationship('FriendshipRequest', backref='sender', primaryjoin=(FriendshipRequest.requesting_id==id))
 	received_requests = db.relationship('FriendshipRequest', backref='receiver', primaryjoin=(FriendshipRequest.requested_id==id))
 	friends = db.relationship('User', secondary=friendships,
@@ -35,6 +36,12 @@ class User(db.Model):
 			g.current_user = self
 			return True
 		return None
+
+	def fb_login(self):
+		token = self.gentoken()
+		session['token'] = token
+		g.current_user = self
+		return True
 
 	def gentoken(self):
 		serializer = Serializer(app.config['SECRET_KEY'], expires_in=3600)
@@ -62,7 +69,7 @@ class User(db.Model):
 		return cls.query.filter(cls.user_id == user_id).first()
 
 	@classmethod
-	def from_fb_user_id(cls, fb_user_id):#if user does not exist create user from FB_ID, Find way to connect existing user to FB_ID
+	def from_fb_user_id(cls, fb_user_id):
 		return cls.query.filter(cls.fb_user_id == fb_user_id).first()
 
 	@classmethod 
@@ -78,6 +85,7 @@ class User(db.Model):
 		kwargs['password_hash'] = bcrypt.hashpw(kwargs['password'].encode('utf-8'), bcrypt.gensalt())
 		del kwargs['password']
 		user = cls(**kwargs)
+		del kwargs['fb_user_id']
 		db.session.add(user)
 		db.session.commit()
 		return user

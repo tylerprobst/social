@@ -7,7 +7,7 @@ user = Blueprint("user", __name__)
 app = Flask(__name__)
 app.config.from_object('config')
 
-@app.route('/friends')
+@user.route('/friends')
 def friends():
 	return render_template('friends.html', user=current_user())
 

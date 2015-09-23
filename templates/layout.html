@@ -11,6 +11,9 @@
 	<button type="submit">logout</button>
 </form>
 {% else %}
-<p><a href="/login">login</a></p>
+<p><a href="{{oauth_link}}">Login with Facebook</a></p>
+<p><a href="/signup">Sign Up</a></p>
 {% endif %}
-<p><a href="/signup">sign up</a></p>
+<p><a href="/users">Users</a></p>
+<p><a href="/friends">Friends</a>
+<p><a href="/requests">Friend Requests</a></p>
